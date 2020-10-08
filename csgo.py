@@ -8,12 +8,6 @@ import numpy as np
 API_KEY = ""
 
 
-def search(stats, key):
-    for stat in stats:
-        if stat['name'] == key:
-            return stat['value']
-
-
 class SteamProfile:
     def __init__(self, steamURL, profileID=""):
         self.steamURL = steamURL
