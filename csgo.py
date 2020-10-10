@@ -59,15 +59,21 @@ class SteamProfile:
             request = requests.get(
                 'http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key='+API_KEY+'&vanityurl='+self.profileID)
             self.steamID = request.json()['response']['steamid']
+            print(f'SteamID: {self.steamID}')
 
     def getCsgoStats(self):
         if self.profileID:
             request = requests.get(
                 'http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key='+API_KEY+'&steamid='+self.steamID)
-            self.csgoStats = request.json()
-            with open('csgo_stats.json', 'w') as stats_file:
-                json.dump(self.csgoStats, stats_file)
-            self.__cleanCsgoStats()
+            print(f'API link: {request.url}')
+            try:
+                self.csgoStats = request.json()
+                with open('csgo_stats.json', 'w') as stats_file:
+                    json.dump(self.csgoStats, stats_file)
+                self.__cleanCsgoStats()
+            except json.decoder.JSONDecodeError:
+                print("Wrong profile settings. Check if your steam account is properly configured.")
+                exit()
 
     def pieChart(self, weapons=['awp', 'ak47', 'm4a1', 'ssg08', 'negev']):
         # weapons - specify up to 5 weapons [1,2,3,4,5]
@@ -139,7 +145,7 @@ class SteamProfile:
 
 
 profile = SteamProfile(
-    "https://steamcommunity.com/id/example/")
+    "")
 
 profile.getSteamID()
 profile.getCsgoStats()
