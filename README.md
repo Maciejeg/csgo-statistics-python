@@ -12,3 +12,6 @@ APIKEY = [Steam API](https://steamcommunity.com/dev/apikey)
 PROFILENAME = https://steamcommunity.com/id/*THISVALUE*/  
 ## Optional arguments
 TODO
+
+## Example output
+![Example output](https://maciekmajek2.usermd.net/media/Figure_1.png)
