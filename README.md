@@ -11,7 +11,16 @@ python3 csgo.py APIKEY PROFILENAME
 APIKEY = [Steam API](https://steamcommunity.com/dev/apikey)  
 PROFILENAME = https://steamcommunity.com/id/*THISVALUE*/  
 ## Optional arguments
-TODO
-
+specify up to 5 weapons for comparison
+Weapons list:
+        """'deagle', 'glock', 'elite', 'fiveseven', 'awp', 'ak47'"""
+        """'aug', 'famas', 'g3sg1', 'p90', 'mac10', 'ump45',"""
+        """'xm1014', 'm249', 'hkp2000', 'p250', 'sg556', 'scar20'"""
+        """'ssg08', 'mp7', 'mp9', 'nova', 'negev', 'sawedoff'"""
+        """'bizon', 'tec9', 'mag7', 'm4a1', 'galilar', 'taser']"""
+### Example 
+```bash
+python csgo.py D5FEAE35149*****08390054F8BE5D elek*****na -W awp,negev,ak47
+```
 ## Example output
 ![Example output](https://maciekmajek2.usermd.net/media/Figure_1.png)
