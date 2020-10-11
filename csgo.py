@@ -45,7 +45,7 @@ if args.weapons:
         print("Specify at least two different weapons.")
         EXIT = True
     if not weapons.issubset(weapons_list):
-        print("Check weapons name.")
+        print("Check weapons names.")
         EXIT = True
 
 if EXIT:
