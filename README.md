@@ -8,7 +8,7 @@ Small Python script for obtaining csgo account stats.
 ```bash
 python3 csgo.py APIKEY PROFILENAME
 ```
-APIKEY = [get steam api key](https://steamcommunity.com/dev/apikey)  
+APIKEY = [Steam API](https://steamcommunity.com/dev/apikey)  
 PROFILENAME = https://steamcommunity.com/id/*THISVALUE*/  
 ## Optional arguments
 TODO
