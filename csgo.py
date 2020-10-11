@@ -11,13 +11,13 @@ API_KEY = ""
 parser = argparse.ArgumentParser(description='CSGO weapon stats')
 parser.add_argument('apikey',
                     type=str,
-                    help='A required API key argument')
+                    help='A required API key argument.')
 parser.add_argument('profilename',
                     type=str,
-                    help='A required profilename string argument steamcommunity.com/id/<<this_value>>/')
+                    help='A required profilename string argument steamcommunity.com/id/<<this_value>>/.')
 parser.add_argument('-W','--weapons',
                     type=str,
-                    help="Specify up to 5 weapons delimited with comma for comparison.  Default are: ak47, awp, negev, ssg08, m4a1")
+                    help="Specify up to 5 weapons delimited with comma for comparison.  Default are: ak47, awp, negev, ssg08, m4a1.")
 args = parser.parse_args()
 
 EXIT = False
@@ -32,9 +32,20 @@ if not args.profilename:
 
 weapons = []
 if args.weapons:
-    weapons = re.findall(r'(?:^|(?<=,))[^,]*', args.weapons)
+    weapons_list = set({
+        'deagle', 'glock', 'elite', 'fiveseven', 'awp', 'ak47',
+        'aug', 'famas', 'g3sg1', 'p90', 'mac10', 'ump45',
+        'xm1014', 'm249', 'hkp2000', 'p250', 'sg556', 'scar20',
+        'ssg08', 'mp7', 'mp9', 'nova', 'negev', 'sawedoff',
+        'bizon', 'tec9', 'mag7', 'm4a1', 'galilar', 'taser',
+    })
+    weapons = set(re.findall(r'(?:^|(?<=,))[^,]*', args.weapons))
+
     if len(weapons) < 2:
-        print("Specify at least two different weapons")
+        print("Specify at least two different weapons.")
+        EXIT = True
+    if not weapons.issubset(weapons_list):
+        print("Check weapons name.")
         EXIT = True
 
 if EXIT:
@@ -73,7 +84,7 @@ class SteamProfile:
     def __getWeaponStats(self):
         weapons_shots = re.findall(
             r"total_shots_(.*?)\'", str(self.cleanCsgoStats))
-        weapons_hits = re.findall(
+        _weapons_hits = re.findall(
             r"total_hits_(.*?)\'", str(self.cleanCsgoStats))
 
         for weapon in weapons_shots:
@@ -110,34 +121,33 @@ class SteamProfile:
                 exit()
 
     def pieChart(self, weapons):
-        # weapons - specify up to 5 weapons [1,2,3,4,5]
         """'deagle', 'glock', 'elite', 'fiveseven', 'awp', 'ak47'"""
         """'aug', 'famas', 'g3sg1', 'p90', 'mac10', 'ump45',"""
         """'xm1014', 'm249', 'hkp2000', 'p250', 'sg556', 'scar20'"""
         """'ssg08', 'mp7', 'mp9', 'nova', 'negev', 'sawedoff'"""
-        """'bizon', 'tec9', 'mag7', 'm4a1', 'galilar', 'taser']"""
-        fig, ax = plt.subplots()
+        """'bizon', 'tec9', 'mag7', 'm4a1', 'galilar', 'taser'"""
+        _, ax = plt.subplots()
 
         size = 0.3
 
         cmap = plt.get_cmap("tab20c")
         outer_colors = cmap(np.arange(5)*4)
         inner_colors = cmap(np.array([1, 2, 5, 6, 9, 10, 13, 14, 17, 18]))
-        values = []
-        keys = []
-        for weapon in weapons:
-            try:
-                values.append(self.weaponsStats[weapon])
-                keys.append(weapon)
-            except KeyError as e:
-                print(f"Wrong weapon name {e}")
 
-        v2 = np.array(values)
-        v1 = np.array(values)
+        try:
+            weapons = {el:self.weaponsStats[el] for el in weapons}
+        except KeyError as e:
+            print(f"Wrong weapon name {e}. Steam API changed?")
+            exit()
+
+        v2 = np.array(list(weapons.values()))
+        v1 = np.array(list(weapons.values()))
+
+        wedges, _ = ax.pie(v1[:, 0], radius=1, colors=outer_colors,
+                               wedgeprops=dict(width=size, edgecolor='w'))
+
         for i in range(len(v2)):
             v2[i] = [v2[i][0]-v2[i][1], v2[i][1]]
-        wedges, texts = ax.pie(v1[:, 0], radius=1, colors=outer_colors,
-                               wedgeprops=dict(width=size, edgecolor='w'))
 
         ax.pie(v2.flatten(), radius=1-size, colors=inner_colors,
                wedgeprops=dict(width=size, edgecolor='w'))
@@ -145,11 +155,11 @@ class SteamProfile:
 
         kw = dict(arrowprops=dict(arrowstyle="-"),
                   bbox=bbox_props, zorder=0, va="center")
-        v2 = np.array(values)
-        v1 = np.array(values)
+        v2 = np.array(list(weapons.values()))
+        v1 = np.array(list(weapons.values()))
         recipe = []
-        for i in range(len(list(keys))):
-            recipe.append(weapons[i]+" ("+str(v2.flatten()[2*i+1])+"/"+str(v2.flatten()[2*i])+")="+str(
+        for i, weapon in enumerate(weapons.keys()):
+            recipe.append(weapon+" ("+str(v2.flatten()[2*i+1])+"/"+str(v2.flatten()[2*i])+")="+str(
                 round(100*float(v2.flatten()[2*i+1])/float(v2.flatten()[2*i]), 1))+"%")
         for i, p in enumerate(wedges):
             ang = (p.theta2 - p.theta1)/2. + p.theta1
