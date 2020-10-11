@@ -3,14 +3,39 @@ import re
 import json
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 
 
 API_KEY = ""
 
+parser = argparse.ArgumentParser(description='CSGO weapon stats')
+parser.add_argument('apikey',
+                    type=str,
+                    help='A required API key argument')
+parser.add_argument('profilename',
+                    type=str,
+                    help='A required profilename string argument steamcommunity.com/id/<<this_value>>/')
+
+args = parser.parse_args()
+
+EXIT = False
+
+if not args.apikey:
+    print("Bad api key")
+    EXIT = True
+
+if not args.profilename:
+    print("Bad profilename")
+    EXIT = True
+
+if EXIT:
+    exit()
+
+API_KEY = args.apikey
 
 class SteamProfile:
     def __init__(self, steamURL, profileID=""):
-        self.steamURL = steamURL
+        self.steamURL = "https://steamcommunity.com/id/" + steamURL + "/"
         self.profileID = profileID
 
     steamID = ""
@@ -145,7 +170,7 @@ class SteamProfile:
 
 
 profile = SteamProfile(
-    "")
+    args.profilename)
 
 profile.getSteamID()
 profile.getCsgoStats()
