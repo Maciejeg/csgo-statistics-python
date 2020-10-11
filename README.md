@@ -27,11 +27,11 @@ PROFILENAME = https://steamcommunity.com/id/*THISVALUE*/
 specify up to 5 weapons for comparison delimited by comma.   
 Weapons list:
 ```python
-        'deagle', 'glock', 'elite', 'fiveseven', 'awp', 'ak47'  
-        'aug', 'famas', 'g3sg1', 'p90', 'mac10', 'ump45'  
-        'xm1014', 'm249', 'hkp2000', 'p250', 'sg556', 'scar20'  
-        'ssg08', 'mp7', 'mp9', 'nova', 'negev', 'sawedoff'  
-        'bizon', 'tec9', 'mag7', 'm4a1', 'galilar', 'taser'  
+deagle, glock, elite, fiveseven, awp, ak47  
+aug, famas, g3sg1, p90, mac10, ump45  
+xm1014, m249, hkp2000, p250, sg556, scar20  
+ssg08, mp7, mp9, nova, negev, sawedoff  
+bizon, tec9, mag7, m4a1, galilar, taser 
 ```
 ### Example 
 ```bash
