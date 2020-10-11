@@ -24,7 +24,7 @@ optional arguments:
 APIKEY = [Steam API](https://steamcommunity.com/dev/apikey)  
 PROFILENAME = https://steamcommunity.com/id/*THISVALUE*/  
 ## Optional arguments
-specify up to 5 weapons for comparison
+specify up to 5 weapons for comparison delimited by comma.   
 Weapons list:
 ```python
         'deagle', 'glock', 'elite', 'fiveseven', 'awp', 'ak47'  
