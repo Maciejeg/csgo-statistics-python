@@ -15,7 +15,9 @@ parser.add_argument('apikey',
 parser.add_argument('profilename',
                     type=str,
                     help='A required profilename string argument steamcommunity.com/id/<<this_value>>/')
-
+parser.add_argument('-W','--weapons',
+                    type=str,
+                    help="Specify up to 5 weapons delimited with comma for comparison.  Default are: ak47, awp, negev, ssg08, m4a1")
 args = parser.parse_args()
 
 EXIT = False
@@ -27,6 +29,13 @@ if not args.apikey:
 if not args.profilename:
     print("Bad profilename")
     EXIT = True
+
+weapons = []
+if args.weapons:
+    weapons = re.findall(r'(?:^|(?<=,))[^,]*', args.weapons)
+    if len(weapons) < 2:
+        print("Specify at least two different weapons")
+        EXIT = True
 
 if EXIT:
     exit()
@@ -100,7 +109,7 @@ class SteamProfile:
                 print("Wrong profile settings. Check if your steam account is properly configured.")
                 exit()
 
-    def pieChart(self, weapons=['awp', 'ak47', 'm4a1', 'ssg08', 'negev']):
+    def pieChart(self, weapons):
         # weapons - specify up to 5 weapons [1,2,3,4,5]
         """'deagle', 'glock', 'elite', 'fiveseven', 'awp', 'ak47'"""
         """'aug', 'famas', 'g3sg1', 'p90', 'mac10', 'ump45',"""
@@ -110,7 +119,6 @@ class SteamProfile:
         fig, ax = plt.subplots()
 
         size = 0.3
-        vals = np.array([[60., 32.], [37., 40.], [29., 10.]])
 
         cmap = plt.get_cmap("tab20c")
         outer_colors = cmap(np.arange(5)*4)
@@ -118,8 +126,11 @@ class SteamProfile:
         values = []
         keys = []
         for weapon in weapons:
-            values.append(self.weaponsStats[weapon])
-            keys.append(weapon)
+            try:
+                values.append(self.weaponsStats[weapon])
+                keys.append(weapon)
+            except KeyError as e:
+                print(f"Wrong weapon name {e}")
 
         v2 = np.array(values)
         v1 = np.array(values)
@@ -149,7 +160,7 @@ class SteamProfile:
             kw["arrowprops"].update({"connectionstyle": connectionstyle})
             ax.annotate(recipe[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y),
                         horizontalalignment=horizontalalignment, **kw)
-        ax.set(aspect="equal", title='shots fired/shots hit')
+        ax.set(aspect="equal", title='shots hit/shots fired')
         plt.show()
 
     def __str__(self):
@@ -174,4 +185,4 @@ profile = SteamProfile(
 
 profile.getSteamID()
 profile.getCsgoStats()
-profile.pieChart()
+profile.pieChart(weapons or ['awp', 'ak47', 'm4a1', 'ssg08', 'negev'])
