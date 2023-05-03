@@ -42,4 +42,4 @@ or
 python csgo.py D5FEAE35149*****08390054F8BE5D elek*****na
 ```
 ## Example output
-![Example output](https://maciekmajek2.usermd.net/media/Figure_1.png)
+![Example output](/imgs/example.jpeg)
